@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 export default function SalesAgent() {
 
     const { agentsData, loading, error } = useLeadContext();
-    console.log(agentsData)
 
     if (loading) {
         return <p className="text-center">Loading...</p>
@@ -28,7 +27,7 @@ export default function SalesAgent() {
             <div className="row d-flex justify-content-center">
 
                 {/* sidebar */}
-                <div className="col-lg-4 border py-4 px-4">
+                <div className="col-lg-3 border py-4 px-4">
                     <h3 className="fw-bold">Sidebar</h3>
                     <Link to="/" >Back to Dashboard</Link>
 
@@ -38,17 +37,16 @@ export default function SalesAgent() {
                 </div>
 
                 {/* all leads in a list */}
-                <div className="col-lg-8 border py-4 px-4">
+                <div className="col-lg-9 border py-4 px-4">
                     <h3 className="text-center pb-4 fw-bold">Sales Agents List</h3>
                     <ul className="list-group">
                         {
-                            agentsData.map((agent) => (
+                            agentsData.map((agent, index) => (
                                 <li key={agent._id} className="list-group-item">
-                                    <p className="d-flex justify-content-between">
-                                        
-                                        <span className="fw-bold">Agent:</span>
-                                        <span>{agent.name}</span>
-                                        <span>{agent.email}</span>
+                                    <p className="row">
+                                    <span className="col-12 col-md-4 pt-1">Agent: {index + 1}</span>
+                                    <span className="col-12 col-md-4 fw-bold pt-1">{agent.name}</span>
+                                    <span className="col-12 col-md-4 pt-1">{agent.email}</span>
                                     </p>
                                 </li>
                             ))

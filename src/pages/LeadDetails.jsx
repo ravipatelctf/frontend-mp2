@@ -41,11 +41,13 @@ export default function LeadDetails() {
                     <h3 className="text-center pb-4 fw-bold">Lead Details</h3>
                     <ul className="list-group">
                         <li className="list-group-item"><strong>Lead Name: </strong>{targetLead.name}</li>
-                        <li className="list-group-item"><strong>Sales Agent: </strong>{targetLead.salesAgent.name}</li>
+                        <li className="list-group-item"><strong>Sales Agent: </strong>
+                            <Link to={`/agents/${targetLead.salesAgent._id}`}>{targetLead.salesAgent.name}</Link>
+                        </li>
                         <li className="list-group-item"><strong>Lead Source: </strong>{targetLead.source}</li>
                         <li className="list-group-item"><strong>Lead Status: </strong>{targetLead.status}</li>
                         <li className="list-group-item"><strong>Priority: </strong>{targetLead.priority}</li>
-                        <li className="list-group-item"><strong>Time to Close: </strong>{targetLead.timeToClose} minutes</li>
+                        <li className="list-group-item"><strong>Time to Close: </strong>{targetLead.timeToClose} days</li>
                     </ul>
                 </div>
 

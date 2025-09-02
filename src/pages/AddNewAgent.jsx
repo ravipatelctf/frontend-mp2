@@ -1,15 +1,19 @@
 import { useState } from "react";
 import { createNewSalesAgent } from "../data";
-
+import { toast } from "react-toastify";
+import useLeadContext from "../contexts/LeadContext";
 
 export default function AddNewAgent() {
 
     const [agentName, setAgentName] = useState("");
     const [agentEmail, setAgentEmail] = useState("");
 
+    const { setAgentsData } = useLeadContext();
 
     async function handleAgentSubmit(event) {
         event.preventDefault();
+
+        toast.info("Adding New Sales Agent...");
 
         const agentObj = {
             "name": agentName,
@@ -19,7 +23,8 @@ export default function AddNewAgent() {
         const createdAgent = await createNewSalesAgent(agentObj);
 
         if (createdAgent) {
-            console.log("createdAgent:", createdAgent);
+            toast.success("New Sales Agent Added Successfully!");
+            setAgentsData(((preValues) => [...preValues, createdAgent]));
         }
 
         setAgentName("");

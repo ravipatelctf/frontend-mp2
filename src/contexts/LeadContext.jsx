@@ -14,17 +14,23 @@ export function LeadProvider({children}) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
-
     useEffect(() => {
         async function fetchData() {
             try {
                 const data1 = await getAllLeads();
-                const data2 = await getAllAgents();
+                
                 if (data1) {
                     setLoading(false)
                     setLeadsData(data1);
+                }
+
+                const data2 = await getAllAgents();
+
+                if (data1) {
+                    setLoading(false)
                     setAgentsData(data2);
                 }
+
             } catch (error) {
                 setLoading(false)
                 setError(true)
@@ -32,7 +38,7 @@ export function LeadProvider({children}) {
         }
 
         fetchData();
-    }, [])
+    }, []);
 
     // filter unique agents
     const uniqueAgentEmailPair = agentsData.reduce((acc, curr) => {
@@ -45,7 +51,19 @@ export function LeadProvider({children}) {
     const uniqueTags = tagsArray.filter((tag, index) => tagsArray.indexOf(tag) === index);
 
     return (
-        <LeadContext.Provider value={{leadsData, agentsData, loading, error, uniqueAgentEmailPair, uniqueTags}}>
+        <LeadContext.Provider 
+            value={{
+                leadsData, 
+                agentsData, 
+                loading, 
+                error, 
+                uniqueAgentEmailPair, 
+                uniqueTags, 
+                leadsData, 
+                setLeadsData, 
+                agentsData, 
+                setAgentsData
+            }}>
             {children}
         </LeadContext.Provider>
     );

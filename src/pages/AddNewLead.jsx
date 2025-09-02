@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useLeadContext from "../contexts/LeadContext";
 import {createNewLead} from "../data";
-
+import { toast } from "react-toastify";
 
 export default function AddNewLead() {
 
@@ -12,8 +12,8 @@ export default function AddNewLead() {
     const [priority, setPriority] = useState("Medium");
     const [timeToClose, setTimeToClose] = useState(1);
     const [tags, setTags] = useState([]);
-
-    const { agentsData, uniqueAgentEmailPair, uniqueTags } = useLeadContext();
+    
+    const { agentsData, setLeadsData, uniqueAgentEmailPair, uniqueTags } = useLeadContext();
 
     function handleTagSelect(event) {
         const {checked, value} = event.target;
@@ -24,8 +24,19 @@ export default function AddNewLead() {
         }
     }
 
+    function handleTimeToClose(value) {
+        if (value < 1) {
+            toast.warn("Time to Close can't be less than 1");
+            return;
+        } else {
+            setTimeToClose(value);
+        } 
+    }
+
     async function handleSubmit(event) {
         event.preventDefault();
+
+        toast.info("Adding New Lead...");
 
         // find sales agent
         const targetAgent = agentsData.find((agent) => agent.email === salesAgent)
@@ -43,7 +54,8 @@ export default function AddNewLead() {
         const createdLead = await createNewLead(leadObj);
         
         if (createdLead) {
-            console.log("createdLead:", createdLead);
+            toast.success("New Lead Added Successfully!");
+            setLeadsData((preValues) => [...preValues, createdLead]);
         }
     
         setLeadName("");
@@ -137,14 +149,14 @@ export default function AddNewLead() {
                 </select>
                 <br />
 
-                <label htmlFor="timeToClose">Time to Close:</label>
+                <label htmlFor="timeToClose">Time to Close ( in days ):</label>
                 <input 
                     type="number" 
                     id="timeToClose"
                     required
                     value={timeToClose}
                     className="form-control"
-                    onChange={(event) => setTimeToClose(event.target.value)}
+                    onChange={(event) => handleTimeToClose(event.target.value)}
                 />
                 <br />
 

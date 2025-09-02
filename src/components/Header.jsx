@@ -16,6 +16,9 @@ export default function Header() {
                 <li className="nav-item">
                     <Link to="/agents" className="nav-link">Sales Agents</Link>
                 </li>
+                <li className="nav-item">
+                    <Link to="/agents/add-new-agent" className="nav-link">Add New Sales Agent</Link>
+                </li>
             </ul>
         </header>
     );

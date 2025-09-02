@@ -9,18 +9,35 @@ export default function Leads() {
 
     const [statusSelect, setStatusSelect] = useState("");
     const [agentSelect, setAgentSelect] = useState("");
+    const [prioritySort, setPrioritySort] = useState("");
+    const [timeToCloseSort, setTimeToCloseSort] = useState("");
 
-    const {leadsData, agentsData, loading, error, uniqueAgentEmailPair} = useLeadContext();
+    const {leadsData, loading, error, uniqueAgentEmailPair} = useLeadContext();
 
+
+    function getSortByTimeToClose(lead) {
+        if (timeToCloseSort === "LessThanFiveDays") return lead.timeToClose < 5;
+        if (timeToCloseSort === "BetweenFiveToTenDays") return lead.timeToClose >= 5 && lead.timeToClose <= 10;
+        if (timeToCloseSort === "MoreThanTenDays") return lead.timeToClose > 10;
+    }
+    
     const filteredLeads = leadsData.filter((lead) => {
-        const filter1 = !statusSelect || lead.status === statusSelect
-        const filter2 = !agentSelect || lead.salesAgent.email === agentSelect
-        return filter1 && filter2;
+        const filterByStatus = !statusSelect || lead.status === statusSelect;
+        const filterByAgent = !agentSelect || lead.salesAgent.email === agentSelect;
+        const sortByPriority = !prioritySort || lead.priority === prioritySort;
+        const sortByTimeToClose = !timeToCloseSort || getSortByTimeToClose(lead);
+        return filterByStatus && filterByAgent && sortByPriority & sortByTimeToClose;
     });    
     
+    // console.log("timeToCloseSort:", timeToCloseSort);
+    // console.log("prioritySort:", prioritySort);
+    // console.log("filteredLeads:", filteredLeads);
+
     function handleClearFilters() {
         setStatusSelect("");
         setAgentSelect("");
+        setPrioritySort("");
+        setTimeToCloseSort("");
     }
 
     function handleStatusSelect(event) {
@@ -53,48 +70,78 @@ export default function Leads() {
             <div className="row d-flex justify-content-center">
 
                 {/* sidebar */}
-                <div className="col-lg-4 border py-4 px-4">
+                <div className="col-lg-3 border py-4 px-4">
                     <h3 className="fw-bold">Sidebar</h3>
                     <Link to="/" >Back to Dashboard</Link>
+                    <hr />
 
-                    {/* filters */}
-                    <div className="py-4">
-                        <div className="d-flex justify-content-between py-2 align-items-center">
-                            <span className="fw-bold">Filters:</span>
+                    {/* filters & sort */}
+                    <div className="py-2">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span className="fw-bold">Filters & Sort:</span>
                             <span className="btn btn-outline-danger" onClick={() => handleClearFilters()}>Clear</span>
                         </div>
+
                         {/* filter by status */}
-                        <select 
-                            id="statusSelect"
-                            value={statusSelect}
-                            onChange={(event) => handleStatusSelect(event)}
-                            className="form-select mt-4"
-                        >
-                            <option value="" disabled>Filter By Status</option>
-                            <option value="New">New</option>
-                            <option value="Contacted">Contacted</option>
-                            <option value="Qualified">Qualified</option>
-                            <option value="Proposal Sent">Proposal Sent</option>
-                            <option value="Closed">Closed</option>
-                        </select>
+                        <div className="mt-4">
+                            <label htmlFor="statusSelect" className="fw-bold">Filter By Status:</label>
+                            <select 
+                                id="statusSelect"
+                                value={statusSelect}
+                                onChange={(event) => handleStatusSelect(event)}
+                                className="form-select pt-1"
+                            >
+                                <option value="" disabled>Filter By Status</option>
+                                <option value="New">New</option>
+                                <option value="Contacted">Contacted</option>
+                                <option value="Qualified">Qualified</option>
+                                <option value="Proposal Sent">Proposal Sent</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
 
                         {/* filter by sales agent */}
-                        <select 
-                            id="agentSelect"
-                            value={agentSelect}
-                            onChange={(event) => handleAgentSelect(event)}
-                            className="form-select mt-4"
-                        >
-                            <option value="" disabled>Filter By Sales Agent Username</option>
-                            {
-                                uniqueAgentEmailPair && Object.entries(uniqueAgentEmailPair).map(([key, value]) => (
-                                    <option key={key} value={key}>{key.split("@")[0]}</option>
-                                ))
-                            }
-                        </select>
-
-                        {/* Link to Add New Lead page  */}
                         <div className="mt-4">
+                            <label htmlFor="agentSelect" className="fw-bold">Filter By Agent:</label>
+                            <select 
+                                id="agentSelect"
+                                value={agentSelect}
+                                onChange={(event) => handleAgentSelect(event)}
+                                className="form-select"
+                            >
+                                <option value="" disabled>Filter By Sales Agent Username</option>
+                                {
+                                    uniqueAgentEmailPair && Object.entries(uniqueAgentEmailPair).map(([key, value]) => (
+                                        <option key={key} value={key}>{key.split("@")[0]}</option>
+                                    ))
+                                }
+                            </select>
+                        </div>
+
+                        {/* sort by priority */}
+                        <div className="mt-4">
+                            <label htmlFor="priority" className="fw-bold">Sort By Priority:</label>
+                            <br />
+                            <input type="radio" checked={prioritySort === "High"} name="priority" id="High" value="High" onChange={(event) => setPrioritySort(event.target.value)} /> High
+                            <br />
+                            <input type="radio" checked={prioritySort === "Medium"} name="priority" id="Medium" value="Medium" onChange={(event) => setPrioritySort(event.target.value)}  /> Medium
+                            <br />
+                            <input type="radio" checked={prioritySort === "Low"} name="priority" id="Low" value="Low" onChange={(event) => setPrioritySort(event.target.value)}  /> Low
+                        </div>
+
+                        {/* sort by timeToClose */}
+                        <div className="mt-4">
+                            <label htmlFor="timeToClose" className="fw-bold">Sort By Time to Close:</label>
+                            <br />
+                            <input type="radio" checked={timeToCloseSort === "LessThanFiveDays"} name="timeToClose" id="LessThanFiveDays" value="LessThanFiveDays" onChange={(event) => setTimeToCloseSort(event.target.value)} /> Less Than Five Days
+                            <br />
+                            <input type="radio" checked={timeToCloseSort === "BetweenFiveToTenDays"} name="timeToClose" id="BetweenFiveToTenDays" value="BetweenFiveToTenDays" onChange={(event) => setTimeToCloseSort(event.target.value)}  /> Between Five To Ten Days
+                            <br />
+                            <input type="radio" checked={timeToCloseSort === "MoreThanTenDays"} name="timeToClose" id="MoreThanTenDays" value="MoreThanTenDays" onChange={(event) => setTimeToCloseSort(event.target.value)}  /> More Than Ten Days
+                        </div>
+                        <hr />
+                        {/* Link to Add New Lead page  */}
+                        <div className="pt-2">
                             <Link to="/leads/add-new-lead" className="btn btn-primary w-100 fw-bold">Add New Lead</Link>
                         </div>
 
@@ -102,18 +149,18 @@ export default function Leads() {
                 </div>
 
                 {/* all leads in a list */}
-                <div className="col-lg-8 border py-4 px-4">
+                <div className="col-lg-9 border py-4 px-4">
                     <h3 className="text-center pb-4 fw-bold">Leads Overview</h3>
                     <ul className="list-group">
                         {
                             (filteredLeads ? filteredLeads : leadsData).map((lead, index) => (
                                 <li key={lead._id} className="list-group-item">
-                                    <p className="d-flex justify-content-between">
-                                        <span>
+                                    <p className="row">
+                                        <span className="col-md-4">
                                             <Link to={`/leads/${lead._id}`} >Lead {index + 1}</Link>    
                                         </span>
-                                        <span>{lead.status}</span>
-                                        <span>{lead.name}</span>
+                                        <span className="col-md-4">{lead.status}</span>
+                                        <span className="col-md-4">{lead.name}</span>
                                     </p>
                                 </li>
                             ))

@@ -45,7 +45,7 @@ export default function SalesAgent() {
                                 <li key={agent._id} className="list-group-item">
                                     <p className="row">
                                     <span className="col-12 col-md-4 pt-1">Agent: {index + 1}</span>
-                                    <span className="col-12 col-md-4 fw-bold pt-1">{agent.name}</span>
+                                    <span className="col-12 col-md-4 fw-bold pt-1"><Link to={`/leads/agent/${agent.email.split("@")[0]}`}>{agent.name}</Link></span>
                                     <span className="col-12 col-md-4 pt-1">{agent.email}</span>
                                     </p>
                                 </li>

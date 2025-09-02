@@ -159,7 +159,9 @@ export default function Leads() {
                                         <span className="col-md-4">
                                             <Link to={`/leads/${lead._id}`} >Lead {index + 1}</Link>    
                                         </span>
-                                        <span className="col-md-4">{lead.status}</span>
+                                        <span className="col-md-4">
+                                            <Link to={`/leads/status/${lead.status}`}>{lead.status}</Link>
+                                        </span>
                                         <span className="col-md-4">{lead.name}</span>
                                     </p>
                                 </li>

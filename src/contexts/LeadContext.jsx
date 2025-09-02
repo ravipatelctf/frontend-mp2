@@ -13,7 +13,7 @@ export function LeadProvider({children}) {
     const [agentsData, setAgentsData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-
+    
     useEffect(() => {
         async function fetchData() {
             try {

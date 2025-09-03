@@ -27,7 +27,7 @@ export default function LeadsBySalesAgent() {
     return (
         <main className="container py-4">
             <div>
-                <h1 className="text-center py-4 fw-bold">Leads By Status</h1>
+                <h1 className="text-center py-4 fw-bold">Leads By Sales Agent</h1>
             </div>
 
             <div className="row d-flex justify-content-center">
@@ -40,9 +40,9 @@ export default function LeadsBySalesAgent() {
                 
                 {/* content area */}
                 <div className="col-lg-9 border py-4 px-4">
-                    <h4 className="text-center fw-bold">Lead List By Status</h4>
+                    <h4 className="text-center fw-bold">Lead List By Agent</h4>
                     <div>
-                        <h5 className="py-2">Sales Agent: {agentUsername}</h5>
+                        <h5 className="py-2">Sales Agent Username: <strong>{agentUsername}</strong></h5>
                         <ul className="list-group">
                             {
                                 filteredLeadsByAgents.map((lead, index) => (

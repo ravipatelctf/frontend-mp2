@@ -53,16 +53,14 @@ export function LeadProvider({children}) {
     return (
         <LeadContext.Provider 
             value={{
-                leadsData, 
-                agentsData, 
+                leadsData,
+                setLeadsData, 
+                agentsData,
+                setAgentsData, 
                 loading, 
                 error, 
                 uniqueAgentEmailPair, 
-                uniqueTags, 
-                leadsData, 
-                setLeadsData, 
-                agentsData, 
-                setAgentsData
+                uniqueTags,                
             }}>
             {children}
         </LeadContext.Provider>

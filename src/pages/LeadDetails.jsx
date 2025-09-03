@@ -42,7 +42,7 @@ export default function LeadDetails() {
                     <ul className="list-group">
                         <li className="list-group-item"><strong>Lead Name: </strong>{targetLead.name}</li>
                         <li className="list-group-item"><strong>Sales Agent: </strong>
-                            <Link to={`/agents/${targetLead.salesAgent._id}`}>{targetLead.salesAgent.name}</Link>
+                            <Link to={`/leads/agent/${targetLead.salesAgent.email.split("@")[0]}`}>{targetLead.salesAgent.name}</Link>
                         </li>
                         <li className="list-group-item"><strong>Lead Source: </strong>{targetLead.source}</li>
                         <li className="list-group-item"><strong>Lead Status: </strong>{targetLead.status}</li>

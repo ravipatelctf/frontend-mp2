@@ -8,7 +8,6 @@ import { LeadProvider } from "./contexts/LeadContext";
 import SalesAgent from "./pages/SalesAgents";
 import AddNewAgent from "./pages/AddNewAgent";
 import { ToastContainer } from "react-toastify";
-import AgentDetails from "./pages/AgentDetails";
 import Reports from "./pages/Reports";
 import LeadsByStatus from "./pages/LeadsByStatus";
 import LeadsBySalesAgents from "./pages/LeadsBySalesAgent";
@@ -26,7 +25,6 @@ export default function App() {
                     <Route path="/leads/:leadId" element={<LeadDetails />} />
                     <Route path="/leads/add-new-lead" element={<AddNewLead />} />
                     <Route path="/agents" element={<SalesAgent />} />
-                    <Route path="/agents/:agentId" element={<AgentDetails />} />
                     <Route path="/agents/add-new-agent" element={<AddNewAgent />} />
                     <Route path="/reports" element={<Reports />} />
                     <Route path="/leads/status/:leadStatus" element={<LeadsByStatus />} />

@@ -1,8 +1,11 @@
-
+import { useState } from "react";
 import useLeadContext from "../contexts/LeadContext";
 import { Link } from "react-router-dom";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
+import { ToggleableSidebar } from "../components/ToggleableSidebar";
+
+
 
 export default function Home() {
 
@@ -18,12 +21,15 @@ export default function Home() {
 
     return (
         <main className="container py-4">
+            <ToggleableSidebar>
+                <Sidebar />
+            </ ToggleableSidebar>
             <div>
-                <h1 className="text-center py-4 fw-bold">Anvaya CRM Dashboard</h1>
+                <h1 className="text-center fw-bold">Anvaya CRM Dashboard</h1>
             </div>
 
             <div className="row d-flex justify-content-center mx-1">
-                <div className="col-md-3 border py-4 px-4">
+                <div className="col-md-3 d-none d-md-block border py-4 px-4">
                     <Sidebar />
                 </div>
                 <div className="col-md-9 border py-4 px-4">
@@ -73,7 +79,7 @@ function ContentBody() {
             <div className="border p-3 row">
                 {
                     leadsData && leadsData.map((lead, index) => index < 4 && (
-                        <span key={lead._id} className="col-md-3 col-6"><Link to={`leads/${lead._id}`}>{lead.name}</Link></span>
+                        <span key={lead._id} className="col-md-4 py-1"><Link to={`leads/${lead._id}`}>{lead.name}</Link></span>
                     ))
                 }
             </div>

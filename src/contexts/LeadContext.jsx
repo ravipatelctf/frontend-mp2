@@ -50,6 +50,11 @@ export function LeadProvider({children}) {
     const tagsArray = leadsData.reduce((acc, curr) => [...acc, ...curr.tags], []);
     const uniqueTags = tagsArray.filter((tag, index) => tagsArray.indexOf(tag) === index);
 
+    const [showToggleSidebar, setShowToggleSidebar] = useState(false);
+    function handleToggleSidebarClick(toggleValue) {
+        setShowToggleSidebar(toggleValue);
+    }
+
     return (
         <LeadContext.Provider 
             value={{
@@ -60,7 +65,10 @@ export function LeadProvider({children}) {
                 loading, 
                 error, 
                 uniqueAgentEmailPair, 
-                uniqueTags,                
+                uniqueTags,
+                showToggleSidebar, 
+                setShowToggleSidebar,
+                handleToggleSidebarClick                
             }}>
             {children}
         </LeadContext.Provider>

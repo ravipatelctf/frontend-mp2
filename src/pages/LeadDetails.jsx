@@ -1,9 +1,10 @@
 import { useParams, Link } from "react-router-dom";
 import useLeadContext from "../contexts/LeadContext";
 import Loading from "../components/Loading";
+import { ToggleableSidebar } from "../components/ToggleableSidebar";
 import { useState } from "react";
 import { updateLead } from "../data";
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
 
 export default function LeadDetails() {
 
@@ -22,12 +23,15 @@ export default function LeadDetails() {
 
     return (
         <main className="container py-4">
+            <ToggleableSidebar>
+                <Sidebar />
+            </ToggleableSidebar>
             <div>
                 <h1 className="text-center py-4">Lead Management: <strong>{targetLead?.name}</strong></h1>
             </div>
 
             <div className="row d-flex justify-content-center mx-1">
-                <div className="col-md-3 border py-4 px-4">
+                <div className="col-md-3 d-none d-md-block border py-4 px-4">
                     <Sidebar />
                 </div>
                 <div className="col-md-9 border py-4 px-4">
@@ -63,7 +67,7 @@ function ContentBody({targetLead}) {
             <li className="list-group-item"><strong>Priority: </strong>{targetLead.priority}</li>
             <li className="list-group-item"><strong>Time to Close: </strong>{targetLead.timeToClose} {targetLead.timeToClose === 1 ? "day" : "days"}</li>
         </ul>
-        <div>
+        <div className="pt-3 d-flex justify-content-end">
             <button 
                 className="btn btn-dark fw-bold px-4"
                 onClick={() => setShowForm(true)}
@@ -100,7 +104,7 @@ function EditLeadForm({targetLead, setShowForm}) {
     async function handleSubmit(event) {
         event.preventDefault();
 
-        toast.info("Adding New Lead...");
+        toast.info("Updating Lead Details...");
         const targetAgent = agentsData.find((agent) => agent.email.split("@")[0] === salesAgent)
         
         const leadObj = {
@@ -116,7 +120,7 @@ function EditLeadForm({targetLead, setShowForm}) {
         const updatedLeadData = await updateLead(targetLead._id, leadObj);
         
         if (updatedLeadData) {
-            toast.success("New Lead Added Successfully!");
+            toast.success("Lead details updated successfully!");
             setShowForm(false)
 
             const newUpdatedLeadsdata = (preValues) => preValues.map((lead) => {
@@ -229,7 +233,10 @@ function EditLeadForm({targetLead, setShowForm}) {
                 onChange={(event) => handleTimeToClose(event.target.value)}
             />
             <br />
-            <button type="submit" className="btn btn-success fw-bold my-4">Update Lead Details</button>
+            <div className="d-flex justify-content-end">
+                <button type="submit" className="btn btn-success fw-bold my-4">Update Lead Details</button>
+            </div>
+            
         </form>
         </>
     );

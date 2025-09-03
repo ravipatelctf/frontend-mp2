@@ -1,6 +1,7 @@
 import Loading from "../components/Loading";
 import useLeadContext from "../contexts/LeadContext";
 import { Link } from "react-router-dom";
+import { ToggleableSidebar } from "../components/ToggleableSidebar";
 
 export default function Reports() {
 
@@ -17,12 +18,15 @@ export default function Reports() {
 
     return (
         <main className="container py-4">
+            <ToggleableSidebar>
+                <Sidebar />
+            </ToggleableSidebar>
             <div>
                 <h1 className="text-center py-4 fw-bold">Anvaya CRM Reports</h1>
             </div>
 
             <div className="row d-flex justify-content-center mx-1">
-                <div className="col-lg-3 border py-4 px-4">
+                <div className="col-lg-3 d-none d-md-block border py-4 px-4">
                     <Sidebar />
                 </div>
                 <div className="col-lg-9 border py-4 px-4">

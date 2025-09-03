@@ -22,7 +22,7 @@ export default function Home() {
                 <h1 className="text-center py-4 fw-bold">Anvaya CRM Dashboard</h1>
             </div>
 
-            <div className="row d-flex justify-content-center">
+            <div className="row d-flex justify-content-center mx-1">
                 <div className="col-md-3 border py-4 px-4">
                     <Sidebar />
                 </div>
@@ -40,11 +40,8 @@ function Sidebar() {
         <>
         <div className="mt-5">
             <Link to="/leads" className="btn btn-outline-dark w-100 mb-3">Leads</Link>
-            
             <Link to="/agents" className="btn btn-outline-dark w-100 mb-3">Agents</Link>
-            
             <Link to="/reports" className="btn btn-outline-dark w-100 mb-3">Reports</Link>
-            
             <Link to="/" className="btn btn-outline-dark w-100 mb-3">Settings</Link>
         </div>
 

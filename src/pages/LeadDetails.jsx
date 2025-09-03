@@ -1,57 +1,236 @@
 import { useParams, Link } from "react-router-dom";
 import useLeadContext from "../contexts/LeadContext";
+import Loading from "../components/Loading";
+import { useState } from "react";
+import { updateLead } from "../data";
+import { toast } from "react-toastify"
 
 export default function LeadDetails() {
 
     const { leadId } = useParams();
-
-    const {leadsData, agentsData, loading, error} = useLeadContext();
-
-    if (loading) {
-        return <p className="text-center">Loading...</p>
-    }
+    const {leadsData, loading, error} = useLeadContext();
 
     if (error) {
         return (
             <div className="text-center">
                 <p>An Error Occurred..</p>
-                <Link to="/">Go Back Home</Link>
             </div>
         );
     }
 
-    const targetLead = leadsData.find((lead) => lead._id === leadId);
+    const targetLead = leadsData && leadsData.find((lead) => lead._id === leadId);
 
     return (
         <main className="container py-4">
             <div>
-                <h1 className="text-center py-4">Lead Management: <strong>{targetLead.name}</strong></h1>
+                <h1 className="text-center py-4">Lead Management: <strong>{targetLead?.name}</strong></h1>
             </div>
 
-            <div className="row d-flex justify-content-center">
-
-                {/* sidebar */}
-                <div className="col-md-4 border py-4 px-4">
-                    <h3 className="fw-bold">Sidebar</h3>
-                    <Link to="/leads" >Back to Leads Page</Link>
+            <div className="row d-flex justify-content-center mx-1">
+                <div className="col-md-3 border py-4 px-4">
+                    <Sidebar />
                 </div>
-
-                {/* all leads in a list */}
-                <div className="col-md-8 border py-4 px-4">
-                    <h3 className="text-center pb-4 fw-bold">Lead Details</h3>
-                    <ul className="list-group">
-                        <li className="list-group-item"><strong>Lead Name: </strong>{targetLead.name}</li>
-                        <li className="list-group-item"><strong>Sales Agent: </strong>
-                            <Link to={`/leads/agent/${targetLead.salesAgent.email.split("@")[0]}`}>{targetLead.salesAgent.name}</Link>
-                        </li>
-                        <li className="list-group-item"><strong>Lead Source: </strong>{targetLead.source}</li>
-                        <li className="list-group-item"><strong>Lead Status: </strong>{targetLead.status}</li>
-                        <li className="list-group-item"><strong>Priority: </strong>{targetLead.priority}</li>
-                        <li className="list-group-item"><strong>Time to Close: </strong>{targetLead.timeToClose} days</li>
-                    </ul>
+                <div className="col-md-9 border py-4 px-4">
+                    { loading ? (<Loading />) : (targetLead && <ContentBody targetLead={targetLead} />) }
                 </div>
-
             </div>
         </main>
+    );
+}
+
+function Sidebar() {
+    return (
+        <>
+        <Link to="/leads" >Back to Leads Page</Link>
+        </>
+    );
+}
+
+function ContentBody({targetLead}) {
+    const [showForm, setShowForm] = useState(false);
+    return (
+        <>
+            { showForm ? (<EditLeadForm targetLead={targetLead} setShowForm={setShowForm} /> ) : (
+        <>
+        <h3 className="text-center pb-4 fw-bold">Lead Details</h3>
+        <ul className="list-group">
+            <li className="list-group-item"><strong>Lead Name: </strong>{targetLead.name}</li>
+            <li className="list-group-item"><strong>Sales Agent: </strong>
+                <Link to={`/leads/agent/${targetLead.salesAgent.email.split("@")[0]}`}>{targetLead.salesAgent.email.split("@")[0]}</Link>
+            </li>
+            <li className="list-group-item"><strong>Lead Source: </strong>{targetLead.source}</li>
+            <li className="list-group-item"><strong>Lead Status: </strong>{targetLead.status}</li>
+            <li className="list-group-item"><strong>Priority: </strong>{targetLead.priority}</li>
+            <li className="list-group-item"><strong>Time to Close: </strong>{targetLead.timeToClose} {targetLead.timeToClose === 1 ? "day" : "days"}</li>
+        </ul>
+        <div>
+            <button 
+                className="btn btn-dark fw-bold px-4"
+                onClick={() => setShowForm(true)}
+            >
+                Edit Lead Details
+            </button>
+        </div>
+        </>
+        )}
+        </>
+    );
+}
+
+
+function EditLeadForm({targetLead, setShowForm}) {
+    const [leadName, setLeadName] = useState(targetLead.name);
+    const [leadSource, setLeadSource] = useState(targetLead.source);
+    const [salesAgent, setSalesAgent] = useState(targetLead.salesAgent.email.split("@")[0]);
+    const [leadStatus, setLeadStatus] = useState(targetLead.status);
+    const [priority, setPriority] = useState(targetLead.priority);
+    const [timeToClose, setTimeToClose] = useState(targetLead.timeToClose);
+    
+    const { agentsData, leadsData, setLeadsData, uniqueAgentEmailPair, uniqueTags } = useLeadContext();
+
+    function handleTimeToClose(value) {
+        if (value < 1) {
+            toast.warn("Time to Close can't be less than 1");
+            return;
+        } else {
+            setTimeToClose(value);
+        } 
+    }
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+
+        toast.info("Adding New Lead...");
+        const targetAgent = agentsData.find((agent) => agent.email.split("@")[0] === salesAgent)
+        
+        const leadObj = {
+            "name": leadName,
+            "source": leadSource,
+            "salesAgent": targetAgent._id,
+            "status": leadStatus,
+            "tags": targetLead.tags, 
+            "timeToClose": parseInt(timeToClose),
+            "priority": priority
+        };
+
+        const updatedLeadData = await updateLead(targetLead._id, leadObj);
+        
+        if (updatedLeadData) {
+            toast.success("New Lead Added Successfully!");
+            setShowForm(false)
+
+            const newUpdatedLeadsdata = (preValues) => preValues.map((lead) => {
+                if (lead._id !== updatedLeadData._id) {
+                    return lead;
+                }
+
+                return {
+                    ...lead,
+                    "name": updatedLeadData.name,
+                    "source": updatedLeadData.source,
+                    "salesAgent": updatedLeadData.salesAgent,
+                    "status": updatedLeadData.status,
+                    "tags": updatedLeadData.tags, 
+                    "timeToClose": parseInt(updatedLeadData.timeToClose),
+                    "priority": updatedLeadData.priority 
+                }
+            })
+            setLeadsData((preValues) => newUpdatedLeadsdata(preValues));
+        }
+    }
+    return (
+        <>
+        <form className="py-4" onSubmit={(event) => handleSubmit(event)}>
+            <label htmlFor="leadName" className="form-label">Lead Name:</label>
+            <input 
+                type="text"
+                id="leadName"
+                className="form-control"
+                value={leadName}
+                placeholder="Enter Lead Name" 
+                onChange={(event) => setLeadName(event.target.value)}
+                required
+            />
+            <br />
+            <label htmlFor="leadSource" className="form-label">Lead Source:</label>
+            <select 
+                id="leadSource"
+                required
+                className="form-select"
+                value={leadSource}
+                onChange={(event) => setLeadSource(event.target.value)}
+            >
+                <option value="" disabled>Select Lead Source</option>
+                <option value="Website">Website</option>
+                <option value="Referral">Referral</option>
+                <option value="Cold Call">Cold Call</option>
+                <option value="Advertisement">Advertisement</option>
+                <option value="Email">Email</option>
+                <option value="Other">Other</option>
+            </select>
+            <br />
+            
+            <label htmlFor="salesAgent">Sales Agent:</label>
+            <select 
+                id="salesAgent"
+                required
+                className="form-select"
+                value={salesAgent}
+                onChange={(event) => setSalesAgent(event.target.value)}
+            >
+                <option value="" disabled>Select sales agent username</option>
+                {
+                    uniqueAgentEmailPair && Object.entries(uniqueAgentEmailPair).map(([key, value]) => (
+                        <option key={key} value={key}>{key.split("@")[0]}</option>
+                    ))
+                }
+            </select>
+            <br />
+
+            <label htmlFor="leadStatus">Lead Status:</label>
+            <select 
+                id="leadStatus"
+                required
+                className="form-select"
+                value={leadStatus}
+                onChange={(event) => setLeadStatus(event.target.value)}
+            >
+                <option value="" disabled>Select Lead Status</option>
+                <option value="New">New</option>
+                <option value="Contacted">Contacted</option>
+                <option value="Qualified">Qualified</option>
+                <option value="Proposal Sent">Proposal Sent</option>
+                <option value="Closed">Closed</option>
+            </select>
+            <br />
+            {/* ['High', 'Medium', 'Low'] */}
+            <label htmlFor="priority">Priority:</label>
+            <select 
+                id="priority"
+                required
+                className="form-select"
+                value={priority}
+                onChange={(event) => setPriority(event.target.value)}
+            >
+                <option value="" disabled>Select Priority</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+            <br />
+
+            <label htmlFor="timeToClose">Time to Close ( in days ):</label>
+            <input 
+                type="number" 
+                id="timeToClose"
+                required
+                value={timeToClose}
+                className="form-control"
+                onChange={(event) => handleTimeToClose(event.target.value)}
+            />
+            <br />
+            <button type="submit" className="btn btn-success fw-bold my-4">Update Lead Details</button>
+        </form>
+        </>
     );
 }

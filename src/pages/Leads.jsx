@@ -59,7 +59,7 @@ export default function Leads() {
                 <h1 className="text-center py-4 fw-bold">Leads List</h1>
             </div>
 
-            <div className="row d-flex justify-content-center">
+            <div className="row d-flex justify-content-center mx-1">
                 <div className="col-lg-3 border py-4 px-4">
                     <Sidebar
                         statusSelect={statusSelect}
@@ -86,7 +86,6 @@ export default function Leads() {
 function Sidebar({ statusSelect, agentSelect, prioritySort, timeToCloseSort, handleClearFilters, handleStatusSelect, handleAgentSelect, uniqueAgentEmailPair, setPrioritySort, setTimeToCloseSort }) {
     return (
         <>
-            <h3 className="fw-bold">Sidebar</h3>
             <Link to="/" >Back to Dashboard</Link>
             <hr />
 

@@ -1,62 +1,38 @@
-import Loading from "../components/Loading";
+
 import useLeadContext from "../contexts/LeadContext";
-import { Link, useParams } from "react-router-dom";
-import { ToggleableSidebar } from "../components/ToggleableSidebar";
+import { useParams } from "react-router-dom";
+import { MainArea, PageTitle } from "../components/MainArea";
+import { FiltersAndSort, FilterByStatus } from "../components/FiltersAndSort";
 
 export default function LeadsBySalesAgent() {
-
-    const { loading, error } = useLeadContext();
-
-    if (error) {
-        return (
-            <div className="text-center">
-                <p>An Error Occurred..</p>
-                <Link to="/">Go Back Home</Link>
-            </div>
-        );
-    }
-
     return (
-        <main className="container py-4">
-            <ToggleableSidebar>
-                <Sidebar />
-            </ToggleableSidebar>
-            <div>
-                <h1 className="text-center py-4 fw-bold">Leads By Sales Agent</h1>
-            </div>
-            <div className="row d-flex justify-content-center mx-1">
-                <div className="col-lg-3 d-none d-md-block border py-4 px-4">
-                    <Sidebar />
-                </div>
-                <div className="col-lg-9 border py-4 px-4">
-                    { loading ? (<Loading />) : (<ContentBody />) }
-                </div>
-            </div>
-        </main>
+        <MainArea>
+            <PageTitle label="Leads By Sales Agent" />
+            <ContentBody>
+                <FiltersAndSort>
+                    <FilterByStatus />
+                </FiltersAndSort>
+            </ContentBody>
+        </MainArea>
     );
 }
 
-function Sidebar() {
-    return (
-        <>
-        <Link to="/" >Back to Dashboard</Link>
-        </>
-    );
-}
-
-
-function ContentBody() {
-    const { leadsData } = useLeadContext();
+function ContentBody({children}) {
+    const { leadsData, filterLeads } = useLeadContext();
     const { agentUsername } = useParams();
     const filteredLeadsByAgents = leadsData.filter((lead) => lead.salesAgent.email.split("@")[0] === agentUsername);
     return (
         <>
         <h4 className="text-center fw-bold">Lead List By Agent</h4>
+        <div className="pb-2">
+            {children}
+        </div>
         <div>
-            <h5 className="py-2">Sales Agent Username: <strong>{agentUsername}</strong></h5>
+            <hr />
+            <h5 className="py-2">Agent: <strong>{agentUsername}</strong></h5>
             <ul className="list-group">
                 {
-                    filteredLeadsByAgents.map((lead, index) => (
+                    filterLeads(filteredLeadsByAgents).map((lead, index) => (
                         <li key={lead._id} className="list-group-item row">
                             <p className="fw-bold">Lead {index + 1}</p>
                             <p>Lead Name : <span className="fw-bold">{lead.name}</span></p>

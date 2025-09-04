@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useLeadContext from "../contexts/LeadContext";
-
+import { Link } from "react-router-dom";
 
 export function ToggleableSidebar({children}) {
 
@@ -28,7 +28,7 @@ export function ToggleableSidebar({children}) {
             style={{ visibility: showToggleSidebar ? "visible" : "hidden" }}
         >
             <div className="offcanvas-header">
-                <h5 className="offcanvas-title" id="offcanvasExampleLabel">Anvaya CRM</h5>
+                <Link to="/" className="offcanvas-title text-secondary text-decoration-none fw-bold" id="offcanvasExampleLabel">Anvaya CRM</Link>
                 <button onClick={() => handleToggleSidebarClick(false)} type="button" className="btn-close" aria-label="Close"></button>
             </div>
             <div className="offcanvas-body">

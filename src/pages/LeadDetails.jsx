@@ -1,52 +1,24 @@
 import { useParams, Link } from "react-router-dom";
 import useLeadContext from "../contexts/LeadContext";
-import Loading from "../components/Loading";
-import { ToggleableSidebar } from "../components/ToggleableSidebar";
 import { useState } from "react";
 import { updateLead } from "../data";
 import { toast } from "react-toastify";
+import { MainArea, PageTitle } from "../components/MainArea";
 
 export default function LeadDetails() {
 
     const { leadId } = useParams();
-    const {leadsData, loading, error} = useLeadContext();
-
-    if (error) {
-        return (
-            <div className="text-center">
-                <p>An Error Occurred..</p>
-            </div>
-        );
-    }
+    const { leadsData } = useLeadContext();
 
     const targetLead = leadsData && leadsData.find((lead) => lead._id === leadId);
-
+    console.log("targetLead:", targetLead)
     return (
-        <main className="container py-4">
-            <ToggleableSidebar>
-                <Sidebar />
-            </ToggleableSidebar>
-            <div>
-                <h1 className="text-center py-4">Lead Management: <strong>{targetLead?.name}</strong></h1>
-            </div>
-
-            <div className="row d-flex justify-content-center mx-1">
-                <div className="col-md-3 d-none d-md-block border py-4 px-4">
-                    <Sidebar />
-                </div>
-                <div className="col-md-9 border py-4 px-4">
-                    { loading ? (<Loading />) : (targetLead && <ContentBody targetLead={targetLead} />) }
-                </div>
-            </div>
-        </main>
-    );
-}
-
-function Sidebar() {
-    return (
-        <>
-        <Link to="/leads" >Back to Leads Page</Link>
-        </>
+        <MainArea>
+            <PageTitle label="Lead Management">
+                <h5 className="text-center">{targetLead?.name}</h5>
+            </PageTitle>
+            {targetLead && <ContentBody targetLead={targetLead} />}
+        </MainArea>
     );
 }
 
@@ -85,28 +57,28 @@ function ContentBody({targetLead}) {
 function EditLeadForm({targetLead, setShowForm}) {
     const [leadName, setLeadName] = useState(targetLead.name);
     const [leadSource, setLeadSource] = useState(targetLead.source);
-    const [salesAgent, setSalesAgent] = useState(targetLead.salesAgent.email.split("@")[0]);
+    const [salesAgent, setSalesAgent] = useState(targetLead.salesAgent.email);
     const [leadStatus, setLeadStatus] = useState(targetLead.status);
     const [priority, setPriority] = useState(targetLead.priority);
     const [timeToClose, setTimeToClose] = useState(targetLead.timeToClose);
     
     const { agentsData, leadsData, setLeadsData, uniqueAgentEmailPair, uniqueTags } = useLeadContext();
 
-    function handleTimeToClose(value) {
-        if (value < 1) {
-            toast.warn("Time to Close can't be less than 1");
-            return;
-        } else {
-            setTimeToClose(value);
-        } 
-    }
-
     async function handleSubmit(event) {
         event.preventDefault();
 
+        if (timeToClose < 1) {
+            toast.warn("Time to Close can't be less than 1");
+            return;
+        }
+
         toast.info("Updating Lead Details...");
-        const targetAgent = agentsData.find((agent) => agent.email.split("@")[0] === salesAgent)
-        
+        console.log("salesAgent:", salesAgent);
+        const targetAgent = agentsData.find((agent) => agent.email.split("@")[0] === salesAgent.split("@")[0]);
+        console.log("targetAgent:", targetAgent);
+
+        console.log(Object.entries(uniqueAgentEmailPair))
+
         const leadObj = {
             "name": leadName,
             "source": leadSource,
@@ -230,11 +202,17 @@ function EditLeadForm({targetLead, setShowForm}) {
                 required
                 value={timeToClose}
                 className="form-control"
-                onChange={(event) => handleTimeToClose(event.target.value)}
+                onChange={(event) => setTimeToClose(event.target.value)}
             />
             <br />
-            <div className="d-flex justify-content-end">
-                <button type="submit" className="btn btn-success fw-bold my-4">Update Lead Details</button>
+            <div className="d-flex justify-content-between">
+                <button 
+                    className="btn btn-danger fw-bold px-4"
+                    onClick={() => setShowForm(false)}
+                >
+                Cancel
+            </button>
+                <button type="submit" className="btn btn-success fw-bold">Update Lead Details</button>
             </div>
             
         </form>

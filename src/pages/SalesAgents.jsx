@@ -1,59 +1,19 @@
-import Loading from "../components/Loading";
+
 import useLeadContext from "../contexts/LeadContext";
 import { Link } from "react-router-dom";
-import { ToggleableSidebar } from "../components/ToggleableSidebar";
+import { MainArea, PageTitle } from "../components/MainArea";
+
 
 export default function SalesAgent() {
-
-    const { loading, error } = useLeadContext();
-
-    if (error) {
-        return (
-            <div className="text-center">
-                <p>An Error Occurred..</p>
-                <Link to="/">Go Back Home</Link>
-            </div>
-        );
-    }
-
     return (
-        <main className="container py-4">
-            <ToggleableSidebar>
-                <Sidebar />
-            </ToggleableSidebar>
-            <div>
-                <h1 className="text-center py-4 fw-bold">Sales Agents Management</h1>
-            </div>
-
-            <div className="row d-flex justify-content-center mx-1">           
-                <div className="col-lg-3 d-none d-md-block border py-4 px-4">
-                    <Sidebar />
-                </div>
-                <div className="col-lg-9 border py-4 px-4">
-                    { loading ? (<Loading />) : (<ContentBody />) }
-                </div>
-
-            </div>
-        </main>
+        <MainArea>
+            <PageTitle label="Sales Agents Management" />
+            <ContentBody />
+        </MainArea>
     );
 }
-
-
-function Sidebar() {
-    return (
-        <>
-        <Link to="/" >Back to Dashboard</Link>
-
-        <div className="py-4">
-            <Link to="/agents/add-new-agent" className="btn btn-primary w-100 fw-bold">Add New Agent</Link>
-        </div>
-        </>
-    );
-}
-
 
 function ContentBody() {
-
     const {agentsData} = useLeadContext();
     return (
         <>
@@ -70,8 +30,10 @@ function ContentBody() {
                     </li>
                 ))
             }
-            
         </ul>
+        <div className="d-flex justify-content-end">
+            <Link to="/agents/add-new-agent" className="btn btn-success fw-bold mt-2">Add New Agent</Link>
+        </div>
         </>
     );
 }

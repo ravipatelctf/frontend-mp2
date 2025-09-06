@@ -34,17 +34,14 @@ function ContentBody() {
         }
     }
 
-    function handleTimeToClose(value) {
-        if (value < 1) {
-            toast.warn("Time to Close can't be less than 1");
-            return;
-        } else {
-            setTimeToClose(value);
-        } 
-    }
 
     async function handleSubmit(event) {
         event.preventDefault();
+
+        if (timeToClose < 1) {
+            toast.warn("Time to Close can't be less than 1");
+            return;
+        }
 
         toast.info("Adding New Lead...");
 
@@ -164,7 +161,7 @@ function ContentBody() {
                 required
                 value={timeToClose}
                 className="form-control"
-                onChange={(event) => handleTimeToClose(event.target.value)}
+                onChange={(event) => setTimeToClose(event.target.value)}
             />
             <br />
 

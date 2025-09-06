@@ -18,7 +18,7 @@ export function PageTitle({label, children}) {
 export function MainArea({children}) {
     const { loading, error } = useLeadContext();
     return (
-        <main className="container">
+        <main className="container py-2">
             {children[0]}
             <div className="row justify-content-start">
                 <ToggleableSidebar>

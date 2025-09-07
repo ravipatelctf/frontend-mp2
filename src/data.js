@@ -5,7 +5,7 @@
 
 export async function createNewLead(newLeadData) {
     try {
-        const response = await fetch(`https://backend-mp2.vercel.app`, {
+        const response = await fetch(`https://backend-mp2.vercel.app/leads`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newLeadData)
@@ -27,7 +27,7 @@ export async function createNewLead(newLeadData) {
 
 export async function getAllLeads() {
     try {
-        const response = await fetch(`https://backend-mp2.vercel.app`);
+        const response = await fetch(`https://backend-mp2.vercel.app/leads`);
         if (!response.ok) {
             throw new Error("Failed to fetch data!");
         }
@@ -45,7 +45,7 @@ export async function getAllLeads() {
 
 export async function updateLead(leadId, updatedLeadData) {
     try {
-        const response = await fetch(`https://backend-mp2.vercel.app/${leadId}`, {
+        const response = await fetch(`https://backend-mp2.vercel.app/leads/${leadId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updatedLeadData)
@@ -109,7 +109,7 @@ export async function getAllAgents() {
 
 export async function getCommentsByLeadId(leadId) {
     try {
-        const response = await fetch(`https://backend-mp2.vercel.app/${leadId}/comments`);
+        const response = await fetch(`https://backend-mp2.vercel.app/leads/${leadId}/comments`);
         if (!response.ok) {
             throw new Error("Failed to fetch data!");
         }
@@ -129,7 +129,7 @@ export async function getCommentsByLeadId(leadId) {
 
 export async function addNewComment(leadId, commentData) {
     try {
-        const response = await fetch(`https://backend-mp2.vercel.app/${leadId}/comments`, {
+        const response = await fetch(`https://backend-mp2.vercel.app/leads/${leadId}/comments`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(commentData)

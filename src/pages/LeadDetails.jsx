@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import useLeadContext from "../contexts/LeadContext";
-import { useState } from "react";
-import { updateLead } from "../data";
+import { useEffect, useState } from "react";
+import { updateLead, getCommentsByLeadId, addNewComment } from "../data";
 import { toast } from "react-toastify";
 import { MainArea, PageTitle } from "../components/MainArea";
 
@@ -11,7 +11,6 @@ export default function LeadDetails() {
     const { leadsData } = useLeadContext();
 
     const targetLead = leadsData && leadsData.find((lead) => lead._id === leadId);
-    console.log("targetLead:", targetLead)
     return (
         <MainArea>
             <PageTitle label="Lead Management">
@@ -38,6 +37,7 @@ function ContentBody({targetLead}) {
             <li className="list-group-item"><strong>Lead Status: </strong>{targetLead.status}</li>
             <li className="list-group-item"><strong>Priority: </strong>{targetLead.priority}</li>
             <li className="list-group-item"><strong>Time to Close: </strong>{targetLead.timeToClose} {targetLead.timeToClose === 1 ? "day" : "days"}</li>
+            <li className="list-group-item"><strong>Tags: </strong>{targetLead.tags.join(", ")}</li>
         </ul>
         <div className="pt-3 d-flex justify-content-end">
             <button 
@@ -49,10 +49,75 @@ function ContentBody({targetLead}) {
         </div>
         </>
         )}
+
+        <CommentSection targetLead={targetLead} />
         </>
     );
 }
 
+
+function CommentSection({ targetLead }) {
+    const [commentsData, setCommentsData] = useState([]);
+    const [commentText, setCommentText] = useState("");
+
+    const { leadId } = useParams();
+
+    useEffect(() => {
+        async function fetchComments() {
+            try {
+                const comments = await getCommentsByLeadId(leadId);
+                if (comments) {
+                    setCommentsData(comments)
+                }
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        fetchComments();
+
+    }, [])
+
+    async function handleCommentSubmit() {
+
+        if (commentText.length === 0) {
+            toast.warn("Please type some text before commenting.");
+            return;
+        }   
+        const newComment = await addNewComment(leadId, {"agentId": targetLead.salesAgent._id, "commentText": commentText});
+
+        if (newComment) {
+            toast.success("Comment added successfully.")
+            setCommentsData((preValues) => [...preValues, newComment])
+        }
+
+        setCommentText("")
+    }
+
+    return (
+        <section className="py-4">
+            <h3 className="text-center fw-bold">Comments({commentsData.length})</h3>
+            <ul className="list-group">
+                {
+                    commentsData?.map((comment) => (
+                        <li key={comment._id} className="list-group-item">
+                            <span><strong>{comment.author.email.split("@")[0]} - </strong>{ new Date(comment.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
+                            <br />
+                            <span><strong>Comment: </strong>{comment.commentText}</span>
+                        </li>                        
+                    ))
+                }
+            </ul>
+            <div className="my-2">
+                <textarea type="text" className="form-control" placeholder="Add a Comment" value={commentText} onChange={(e) => setCommentText(e.target.value)}></textarea>
+                <div className={`pt-3 gap-2 d-flex justify-content-end`}>
+                    <button className="btn btn-outline-dark fw-bold px-4" onClick={() => setCommentText("")}>Cancel</button>
+                    <button className="btn btn-dark fw-bold px-4" onClick={(e) => handleCommentSubmit(e)}>Comment</button>
+                </div>
+            </div>
+        </section>
+    );
+}
 
 function EditLeadForm({targetLead, setShowForm}) {
     const [leadName, setLeadName] = useState(targetLead.name);
@@ -61,8 +126,18 @@ function EditLeadForm({targetLead, setShowForm}) {
     const [leadStatus, setLeadStatus] = useState(targetLead.status);
     const [priority, setPriority] = useState(targetLead.priority);
     const [timeToClose, setTimeToClose] = useState(targetLead.timeToClose);
-    
+    const [tags, setTags] = useState([...targetLead.tags]);
+
     const { agentsData, leadsData, setLeadsData, uniqueAgentEmailPair, uniqueTags } = useLeadContext();
+
+    function handleTagSelect(event) {
+        const {checked, value} = event.target;
+        if (checked) {
+            setTags((preValues) => [...preValues, value])
+        } else {
+            setTags((preValues) => preValues.filter((pv => pv !== value)))
+        }
+    }
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -73,18 +148,14 @@ function EditLeadForm({targetLead, setShowForm}) {
         }
 
         toast.info("Updating Lead Details...");
-        console.log("salesAgent:", salesAgent);
         const targetAgent = agentsData.find((agent) => agent.email.split("@")[0] === salesAgent.split("@")[0]);
-        console.log("targetAgent:", targetAgent);
-
-        console.log(Object.entries(uniqueAgentEmailPair))
 
         const leadObj = {
             "name": leadName,
             "source": leadSource,
             "salesAgent": targetAgent._id,
             "status": leadStatus,
-            "tags": targetLead.tags, 
+            "tags": tags, 
             "timeToClose": parseInt(timeToClose),
             "priority": priority
         };
@@ -205,6 +276,31 @@ function EditLeadForm({targetLead, setShowForm}) {
                 onChange={(event) => setTimeToClose(event.target.value)}
             />
             <br />
+
+            <label htmlFor="tags">Tags:</label>
+            <div className="row">
+            {uniqueTags.length !== 0 ? (
+                uniqueTags.map((tag, index) => (
+                    <div key={index} className="col-lg-3 col-md-6 ">
+                        <span className="form-check">
+                            <input 
+                                type="checkbox" 
+                                id="tag"
+                                checked={tags.includes(tag)}
+                                value={tag}
+                                className="me-2"
+                                onChange={(event) => handleTagSelect(event)}
+                            />{tag}
+                        </span>
+                        
+                    </div> 
+                ))
+                ) : (<p className="text-center">Loading Tags...</p>)
+            }
+            </div>
+
+            <br />
+
             <div className="d-flex justify-content-between">
                 <button 
                     className="btn btn-danger fw-bold px-4"

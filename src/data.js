@@ -5,7 +5,7 @@
 
 export async function createNewLead(newLeadData) {
     try {
-        const response = await fetch(`https://backend-mp2.vercel.app/leads`, {
+        const response = await fetch(`https://backend-mp2.vercel.app`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newLeadData)
@@ -27,7 +27,7 @@ export async function createNewLead(newLeadData) {
 
 export async function getAllLeads() {
     try {
-        const response = await fetch(`https://backend-mp2.vercel.app/leads`);
+        const response = await fetch(`https://backend-mp2.vercel.app`);
         if (!response.ok) {
             throw new Error("Failed to fetch data!");
         }
@@ -45,7 +45,7 @@ export async function getAllLeads() {
 
 export async function updateLead(leadId, updatedLeadData) {
     try {
-        const response = await fetch(`https://backend-mp2.vercel.app/leads/${leadId}`, {
+        const response = await fetch(`https://backend-mp2.vercel.app/${leadId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updatedLeadData)
@@ -67,7 +67,7 @@ export async function updateLead(leadId, updatedLeadData) {
 
 export async function createNewSalesAgent(newAgentData) {
     try {
-        const response = await fetch(`https://backend-mp2.vercel.app/agents`, {
+        const response = await fetch(`http://localhost:3000/agents`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newAgentData)
@@ -91,7 +91,7 @@ export async function createNewSalesAgent(newAgentData) {
 
 export async function getAllAgents() {
     try {
-        const response = await fetch(`https://backend-mp2.vercel.app/agents`);
+        const response = await fetch(`http://localhost:3000/agents`);
         if (!response.ok) {
             throw new Error("Failed to fetch data!");
         }
@@ -103,5 +103,46 @@ export async function getAllAgents() {
     }
 }
 
+// ----------------------------------------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------------------------------------
+
+export async function getCommentsByLeadId(leadId) {
+    try {
+        const response = await fetch(`https://backend-mp2.vercel.app/${leadId}/comments`);
+        if (!response.ok) {
+            throw new Error("Failed to fetch data!");
+        }
+
+        const data = await response.json();
+        // console.log("comments:", data);
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// ----------------------------------------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------------------------------------
+
+export async function addNewComment(leadId, commentData) {
+    try {
+        const response = await fetch(`https://backend-mp2.vercel.app/${leadId}/comments`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(commentData)
+        });
+        if (!response.ok) {
+            throw new Error("Failed to fetch data!");
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
 
 // ----------------------------------------------------------------------------------------------------------

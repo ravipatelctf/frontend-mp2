@@ -67,7 +67,7 @@ export async function updateLead(leadId, updatedLeadData) {
 
 export async function createNewSalesAgent(newAgentData) {
     try {
-        const response = await fetch(`http://localhost:3000/agents`, {
+        const response = await fetch(`https://backend-mp2.vercel.app/agents`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newAgentData)
@@ -91,7 +91,7 @@ export async function createNewSalesAgent(newAgentData) {
 
 export async function getAllAgents() {
     try {
-        const response = await fetch(`http://localhost:3000/agents`);
+        const response = await fetch(`https://backend-mp2.vercel.app/agents`);
         if (!response.ok) {
             throw new Error("Failed to fetch data!");
         }

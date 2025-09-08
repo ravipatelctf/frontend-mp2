@@ -51,6 +51,37 @@ function ContentBody() {
                     <Bar data={dataAgent}/>
                 </div>
             </div>
+
+            <div className="border border-dark rounded-5 col-lg-5 py-2">
+                <h4 className="fw-bold text-center text-secondary pt-1">Total Leads in Pipeline by Status:</h4>
+                <div className="row justify-content-center text-secondary">
+                    <div className="col-md-5">
+                        <span className="col-6 fw-bold">Total Leads: </span>
+                        <span className="col-6">{leadsData.length}</span>
+                    </div>
+                </div> 
+                <div className="py-3">
+                    <Bar data={dataStatus}/>
+                </div>
+            </div>
+
+            <div className="border border-dark rounded-5 col-lg-5 py-2">
+                <h4 className="fw-bold text-center text-secondary pt-1">Total Number of Leads Closed :</h4>
+                <div className="row justify-content-center text-secondary">
+                    <div className="col-md-5">
+                        <span className="col-6 fw-bold">Total Leads: </span>
+                        <span className="col-6">{leadsData.length}</span>
+                    </div>
+                    <div className="col-md-5">
+                        <span className="col-6 fw-bold">Leads Closed: </span>
+                        <span className="col-6">{leadsData.filter(lead => lead.status === "Closed").length}</span>
+                    </div>
+                </div> 
+                <div className="py-3">
+                    <Bar data={dataStatus}/>
+                </div>
+            </div>
+
         </div>
         <br />
         </>

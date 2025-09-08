@@ -63,6 +63,29 @@ export async function updateLead(leadId, updatedLeadData) {
 
 // ----------------------------------------------------------------------------------------------------------
 
+
+// ----------------------------------------------------------------------------------------------------------
+
+export async function deleteLead(leadId) {
+    try {
+        const response = await fetch(`https://backend-mp2.vercel.app/leads/${leadId}`, {
+            method: "DELETE"
+        });
+        if (!response.ok) {
+            throw new Error("Failed to fetch data!");
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// ----------------------------------------------------------------------------------------------------------
+
+
+
 // ----------------------------------------------------------------------------------------------------------
 
 export async function createNewSalesAgent(newAgentData) {
@@ -105,6 +128,32 @@ export async function getAllAgents() {
 
 // ----------------------------------------------------------------------------------------------------------
 
+
+// ----------------------------------------------------------------------------------------------------------
+
+export async function deleteSalesAgent(agentId) {
+    try {
+        const response = await fetch(`https://backend-mp2.vercel.app/agents/${agentId}`, {
+            method: "DELETE"
+        });
+        if (!response.ok) {
+            throw new Error("Failed to fetch data!");
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+// ----------------------------------------------------------------------------------------------------------
+
+
+
+
+
 // ----------------------------------------------------------------------------------------------------------
 
 export async function getCommentsByLeadId(leadId) {
@@ -133,6 +182,27 @@ export async function addNewComment(leadId, commentData) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(commentData)
+        });
+        if (!response.ok) {
+            throw new Error("Failed to fetch data!");
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// ----------------------------------------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------------------------------------
+
+export async function deleteComment(commentId) {
+    try {
+        const response = await fetch(`https://backend-mp2.vercel.app/leads/${commentId}/comments`, {
+            method: "DELETE"
         });
         if (!response.ok) {
             throw new Error("Failed to fetch data!");

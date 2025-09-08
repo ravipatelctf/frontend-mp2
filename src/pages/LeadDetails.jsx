@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import useLeadContext from "../contexts/LeadContext";
 import { useEffect, useState } from "react";
-import { updateLead, getCommentsByLeadId, addNewComment } from "../data";
+import { updateLead, getCommentsByLeadId, deleteLead, addNewComment, deleteComment } from "../data";
 import { toast } from "react-toastify";
 import { MainArea, PageTitle } from "../components/MainArea";
 
@@ -16,13 +16,37 @@ export default function LeadDetails() {
             <PageTitle label="Lead Management">
                 <h5 className="text-center">{targetLead?.name}</h5>
             </PageTitle>
-            {targetLead && <ContentBody targetLead={targetLead} />}
+            {targetLead ? 
+                (
+                    <ContentBody targetLead={targetLead} />
+                ) : (
+                    <div className="text-center py-4">
+                        <h4>This Lead was deleted</h4>
+                        <Link to="/leads">Go back to Leads Page</Link>
+                    </div>
+                )}
         </MainArea>
     );
 }
 
 function ContentBody({targetLead}) {
     const [showForm, setShowForm] = useState(false);
+    const { leadsData, setLeadsData } = useLeadContext();
+
+    async function handleLeadDelete(leadId) {
+        toast.info("deleting lead...")
+        try {
+            const deleteMessage = await deleteLead(leadId)
+            if (deleteMessage.message) {
+                toast.success("Lead deleted successfully.")
+                setLeadsData((preValues) => preValues.filter((pv) => pv._id !== leadId))
+            }
+            
+        } catch (error) {
+            toast.error("Failed to delete lead.")
+        }
+    }
+    
     return (
         <>
             { showForm ? (<EditLeadForm targetLead={targetLead} setShowForm={setShowForm} /> ) : (
@@ -39,7 +63,14 @@ function ContentBody({targetLead}) {
             <li className="list-group-item"><strong>Time to Close: </strong>{targetLead.timeToClose} {targetLead.timeToClose === 1 ? "day" : "days"}</li>
             <li className="list-group-item"><strong>Tags: </strong>{targetLead.tags.join(", ")}</li>
         </ul>
-        <div className="pt-3 d-flex justify-content-end">
+        <div className="pt-3 d-flex gap-2 justify-content-end">
+        
+            <button 
+                onClick={() => handleLeadDelete(targetLead._id)}
+                className="btn btn-outline-danger fw-bold">
+                Delete Lead
+            </button>
+
             <button 
                 className="btn btn-dark fw-bold px-4"
                 onClick={() => setShowForm(true)}
@@ -94,6 +125,21 @@ function CommentSection({ targetLead }) {
         setCommentText("")
     }
 
+    async function handleCommentDelete(commentId) {
+        toast.info("deleting comment...")
+        try {
+            const deleteMessage = await deleteComment(commentId)
+            if (deleteMessage.message) {
+                toast.success("Comment deleted successfully.")
+                setCommentsData((preValues) => preValues.filter(pv => pv._id !== commentId))
+            }
+            
+        } catch (error) {
+            toast.error("Failed to delete comment.")
+        }
+    }
+
+    console.log("commentsData:", commentsData)
     return (
         <section className="py-4">
             <h3 className="text-center fw-bold">Comments({commentsData.length})</h3>
@@ -101,9 +147,18 @@ function CommentSection({ targetLead }) {
                 {
                     commentsData?.map((comment) => (
                         <li key={comment._id} className="list-group-item">
-                            <span><strong>{comment.author.email.split("@")[0]} - </strong>{ new Date(comment.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
+                            <span>
+                                <span><strong>{comment.author.email.split("@")[0]} - </strong>{ new Date(comment.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
+                                <br />
+                                <span><strong>Comment: </strong>{comment.commentText}</span>
+                            </span>
                             <br />
-                            <span><strong>Comment: </strong>{comment.commentText}</span>
+                            <span className="d-flex justify-content-end">
+                                <button
+                                    onClick={() => handleCommentDelete(comment._id)} 
+                                    className="btn btn-danger fw-bold btn-sm mx-1">Delete</button>
+                            </span>
+                            
                         </li>                        
                     ))
                 }

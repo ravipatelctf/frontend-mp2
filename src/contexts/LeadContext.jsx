@@ -99,26 +99,6 @@ export function LeadProvider({children}) {
         Medium: 2,
         Low: 1
     }
-    
-    // filterLeads.sort((a, b) => {
-    //     if (prioritySort === "LowToHigh") {
-    //         return priorityOrder[a.priority] - priorityOrder[b.priority]; 
-    //     }
-        
-    //     if (prioritySort === "HighToLow") {
-    //         return priorityOrder[b.priority] - priorityOrder[a.priority]; 
-    //     }
-
-    //     if (timeToCloseSort === "Ascending") {
-    //         return a.timeToClose - b.timeToClose;
-    //     }
-
-    //     if (timeToCloseSort === "Descending") {
-    //         return b.timeToClose - a.timeToClose;
-    //     }
-
-    //     return 0;
-    // });
 
     function handleClearFilters() {
         setStatusSelect("");
@@ -135,7 +115,8 @@ export function LeadProvider({children}) {
         setAgentSelect(event.target.value);
     }
 // -------------------------------------------------------------------------------------------
-
+    console.log("leadsData:", leadsData);
+    console.log("agentsdata:", agentsData);
     return (
         <LeadContext.Provider 
             value={{

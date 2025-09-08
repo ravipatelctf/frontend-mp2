@@ -1,9 +1,9 @@
 
+
 import useLeadContext from "../contexts/LeadContext";
 import { Link } from "react-router-dom";
 import { MainArea, PageTitle } from "../components/MainArea";
-import {deleteSalesAgent} from "../data";
-import {toast} from "react-toastify";
+
 
 export default function SalesAgent() {
     return (
@@ -15,22 +15,7 @@ export default function SalesAgent() {
 }
 
 function ContentBody() {
-    const {agentsData, setAgentsData} = useLeadContext();
-
-    async function handleAgentDelete(agentId) {
-        toast.info("deleting agent...")
-        try {
-            const deleteMessage = await deleteSalesAgent(agentId)
-            if (deleteMessage.message) {
-                toast.success("Agent deleted successfully.")
-                setAgentsData((preValues) => preValues.filter(pv => pv._id !== agentId));
-            }
-            
-        } catch (error) {
-            toast.error("Failed to delete agent.")
-        }
-        
-    }
+    const {agentsData} = useLeadContext();
     return (
         <>
         <h3 className="text-center pb-4 fw-bold">Sales Agents List</h3>
@@ -39,10 +24,9 @@ function ContentBody() {
                 agentsData.map((agent, index) => (
                     <li key={agent._id} className="list-group-item">
                         <p className="row">
-                        <span className="col-12 col-md-3 pt-1">Agent: {index + 1}</span>
-                        <span className="col-12 col-md-3 fw-bold pt-1"><Link to={`/leads/agent/${agent.email.split("@")[0]}`}>{agent.name}</Link></span>
+                        <span className="col-12 col-md-4 pt-1">Agent: {index + 1}</span>
+                        <span className="col-12 col-md-4 fw-bold pt-1"><Link to={`/leads/agent/${agent.email.split("@")[0]}`}>{agent.name}</Link></span>
                         <span className="col-12 col-md-4 pt-1">{agent.email}</span>
-                        <button onClick={() => handleAgentDelete(agent._id)} className="col-12 col-md-2 mt-1 fw-bold btn btn-outline-danger">Delete</button>
                         </p>
                     </li>
                 ))

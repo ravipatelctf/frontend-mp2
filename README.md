@@ -1,83 +1,80 @@
 # Anvaya CRM
 
-A full-stack recipe management app where you can browse, search, add, edit, and view detailed recipes.  
-Built with a React frontend, Express/Node backend, MongoDB database, and JWT-based authentication.
+A full-stack CRM app where you can manage sales leads and sales agents. 
+Built with a React frontend, Express/Node backend, MongoDB database.
 
 ---
 
 ## Demo Link
 
-[Live Demo](https://my-recipe-organizer.com)  
-
----
-
-## Login
-
-> **Guest**  
-> Username: `guest_user`  
-> Password: `guest_pass`
+[Live Demo](https://drive.google.com/drive/folders/1yDD9mhJzygoMbtzXZZC14kA7ukLaHFED?usp=sharing)  
 
 ---
 
 ## Quick Start
 
 ```
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
+git clone https://github.com/ravipatelctf/frontend-mp2.git
+cd frontend-mp2
 npm install
-npm run dev      # or `npm start` / `yarn dev`
+npm run dev
 ```
 
 ## Technologies
 - React JS
 - React Router
+- chart.js
 - Node.js
 - Express
 - MongoDB
-- JWT
 
 ## Demo Video
 Watch a walkthrough (5–7 minutes) of all major features of this app:
-[Loom Video Link]()
+[Loom Video Link](https://drive.google.com/drive/folders/1OgSBxnrevRFsLiCMaXhPz7bwGXDh-lrP?usp=drive_link)
 
 ## Features
+
+**Sidebar**
+- Lists links to all major parts of webapp.
+
 **Home**
-- Displays a list of all recipes
-- Search recipes by title in real time
+- Displays an overview of sales leads.
 
-**Recipe Listing**
-- Paginated recipe list
-- “Add New Recipe” button opens a form
+**Leads Listing**
+- Display all leads along with the status of the leads.
+- “Add New Lead” button opens a form to add new lead.
 
-**Recipe Details**
-- View full recipe information (ingredients, steps, images)
-- “Edit Recipe” to update title, ingredients, steps
-
-**Authentication**
-- User signup and login with JWT
-- Protected routes for adding/editing recipes
+**Lead Details**
+- View full lead information (status, assigned sales agent, etc)
+- "Edit Lead Details" to update name, sales agent, status, tags, etc.
+- "Delete Lead" button deletes the lead
+- Comment section lists all comments and a input box to add new comments
 
 ## API Reference
 
-### **GET	/api/recipes**<br>	 
-List all recipes<br>	 
-Sample Response:<br>
-```[{ _id, title, summary, ... }, …]```
+### **POST	/leads**<br>	 
+Add new lead<br>	 
+Sample Request Body:<br>
+```{ name: "Adventurous Fabwears", status: "New", ... }```
+Sample Response Body:<br>
+```{ _id, name, salesAgent, ... }```
 
-### **GET	/api/recipes/:id**<br>	 	
-Get details for one recipe<br>		
+### **GET	/leads**<br>	 
+List all leads<br>	 
 Sample Response:<br>
-```{ _id, title, ingredients, steps, ... }```
+```[{ _id, name, salesAgent, ... }, …]```
 
-### **POST	/api/recipes**<br> 	
+### **POST	/leads/:id**<br>	 	
+Update Lead details by id<br>		
+Sample Request Body:<br>
+```{ name: "Bright Mind Publishers", status: "Closed", ... }```
+Sample Response Body:<br>
+```{ _id, name, salesAgent, ... }```
+
+### **DELETE	/leads/:id**<br> 	
 Create a new recipe (protected)<br>	
 Sample Response:<br>
 ```{ _id, title, summary, ... }```
 
-### **POST	/api/auth/signup**<br>  	
-Register a new user<br> 	 
-Sample Response:<br> 
-```{ userId, token }```
-
 ## Contact
-For bugs or feature requests, please reach out to akanksha.xxx@gmail.com
+For bugs or feature requests, please reach out to ravipatelctf@gmail.com

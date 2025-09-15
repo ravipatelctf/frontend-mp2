@@ -3,9 +3,15 @@
 A full-stack CRM app where you can manage sales leads and sales agents. 
 Built with a React frontend, Express/Node backend, MongoDB database.
 
-## Demo Link
-Watch a walkthrough (5 minutes) of all major features of this app:
+## 🔗 Links  
+
+### 🎥 Demo Video  
+Watch a 5-minute walkthrough of all major features:  
 [Video Link](https://drive.google.com/drive/folders/1bXfdFuiQuG2VnTvE9CPctbqODyjZtsDb?usp=drive_link)
+
+### 🌐 Live Deployment  
+Access the app here:  
+[anvaya CRM](https://frontend-mp2.vercel.app/)
 
 ## Quick Start
 

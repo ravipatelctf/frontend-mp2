@@ -3,14 +3,9 @@
 A full-stack CRM app where you can manage sales leads and sales agents. 
 Built with a React frontend, Express/Node backend, MongoDB database.
 
----
-
 ## Demo Link
 Watch a walkthrough (5 minutes) of all major features of this app:
 [Video Link](https://drive.google.com/drive/folders/1bXfdFuiQuG2VnTvE9CPctbqODyjZtsDb?usp=drive_link)
-
-
----
 
 ## Quick Start
 
@@ -20,7 +15,6 @@ cd frontend-mp2
 npm install
 npm run dev
 ```
----
 
 ## Technologies
 - React JS
@@ -29,8 +23,6 @@ npm run dev
 - Node.js
 - Express
 - MongoDB
-
----
 
 ## Features
 
@@ -125,7 +117,7 @@ npm run dev
         "createdAt": "2025-09-02T10:33:12.716Z",
         "updatedAt": "2025-09-02T10:33:12.716Z",
         "__v": 0
-    }, ...
+    }
 ]
 ```
 

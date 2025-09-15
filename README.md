@@ -6,8 +6,8 @@ Built with a React frontend, Express/Node backend, MongoDB database.
 ---
 
 ## Demo Link
-Watch a walkthrough (5–7 minutes) of all major features of this app:
-[Video Link](https://drive.google.com/drive/folders/1OgSBxnrevRFsLiCMaXhPz7bwGXDh-lrP?usp=drive_link)
+Watch a walkthrough (5 minutes) of all major features of this app:
+[Video Link](https://drive.google.com/drive/folders/1bXfdFuiQuG2VnTvE9CPctbqODyjZtsDb?usp=drive_link)
 
 
 ---
@@ -53,7 +53,9 @@ npm run dev
 **Reports**
 - Displays analytics of leads data using charts
 
-## API Reference
+## 📖 API Reference
+
+### 🌐 lead routes
 
 #### POST /leads 
 **Description:** Add new lead<br>
@@ -128,7 +130,7 @@ npm run dev
 ```
 
 #### **POST	/leads/:id**<br>	 	
-**Description:** Update Lead details by id<br>		
+**Description:** Update lead details by id<br>		
 **Sample Request Body:**
 ```json
 {
@@ -168,12 +170,124 @@ npm run dev
 }
 ```
 
-#### **DELETE	/leads/:id**<br> 	
-**Description:** Create a new recipe (protected)<br>	
+#### **DELETE	/leads/:id**
+**Description:** Delete a lead by id<br>	
 **Sample Response:**
 ```json
 {
     "message": "Lead deleted successfully."
+}
+```
+
+### 🌐 agent routes
+
+#### POST /agents
+**Description:** Add new agent<br>
+**Sample Request Body:**
+```json
+{
+    "name": "Price Kumar",
+    "email": "kumar.price1@anvaya.com"
+}
+```
+**Sample Response Body:**
+```json
+{
+    "name": "Price Kumar",
+    "email": "kumar.price1@anvaya.com",
+    "_id": "68c7a5493880d38922bec4e3",
+    "createdAt": "2025-09-15T05:34:01.635Z",
+    "updatedAt": "2025-09-15T05:34:01.635Z",
+    "__v": 0
+}
+```
+
+#### **GET	/agents**<br>	 
+**Description:** Get all agents<br> 
+**Sample Response:**
+```json
+[
+    {
+        "_id": "68b296d656141baf97cae4b6",
+        "name": "Arjun Mehta",
+        "email": "arjun.mehta@anvaya.com",
+        "createdAt": "2025-08-30T06:14:46.392Z",
+        "updatedAt": "2025-08-30T06:14:46.392Z",
+        "__v": 0
+    }
+]
+```
+
+#### **DELETE	/agents/:id**<br> 	
+**Description:** Delete an agent by id<br>	
+**Sample Response:**
+```json
+{
+    "message": "Agent deleted successfully."
+}
+```
+
+### 🌐 comment routes
+
+#### POST /leads/:id/comments
+**Description:** Add new comment by lead id<br>
+**Sample Request Body:**
+```json
+{
+    "agentId": "68b296da56141baf97cae4bb",
+    "commentText": "This is test comment 2."
+}
+```
+**Sample Response Body:**
+```json
+{
+    "lead": null,
+    "author": {
+        "_id": "68b296da56141baf97cae4bb",
+        "name": "Rakesh Verma",
+        "email": "rakesh.verma@anvaya.com",
+        "createdAt": "2025-08-30T06:14:50.250Z",
+        "updatedAt": "2025-08-30T06:14:50.250Z",
+        "__v": 0
+    },
+    "commentText": "This is test comment 2.",
+    "_id": "68c7a6f93880d38922bec4e7",
+    "createdAt": "2025-09-15T05:41:13.188Z",
+    "updatedAt": "2025-09-15T05:41:13.188Z",
+    "__v": 0
+}
+```
+
+#### **GET	/leads/:id/comments**	 
+**Description:** Get all comments by lead id<br> 
+**Sample Response:**
+```json
+[
+    {
+        "_id": "68bc1a125fc9c385a6e7b2a3",
+        "lead": null,
+        "author": {
+            "_id": "68b296da56141baf97cae4bb",
+            "name": "Rakesh Verma",
+            "email": "rakesh.verma@anvaya.com",
+            "createdAt": "2025-08-30T06:14:50.250Z",
+            "updatedAt": "2025-08-30T06:14:50.250Z",
+            "__v": 0
+        },
+        "commentText": "This is a test comment 2.",
+        "createdAt": "2025-09-06T11:25:06.889Z",
+        "updatedAt": "2025-09-06T11:25:06.889Z",
+        "__v": 0
+    }
+]
+```
+
+#### **DELETE	/leads/:id/comments**	
+**Description:** Delete a comment by comment id<br>	
+**Sample Response:**
+```json
+{
+    "message": "Comment deleted successfully."
 }
 ```
 
